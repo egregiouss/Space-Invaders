@@ -1,4 +1,5 @@
 import pygame as pg
+from config import Config as cfg
 
 
 def change_size(image, multiplier):
@@ -18,9 +19,11 @@ class Player(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
 
         if keys[pg.K_RIGHT]:
-            self.rect.x += self.speed
+            if self.rect.x <= (cfg.SCREEN_WIDTH - self.speed - self.image.get_size()[0]):
+                self.rect.x += self.speed
         elif keys[pg.K_LEFT]:
-            self.rect.x -= self.speed
+            if self.rect.x >= 0:
+                self.rect.x -= self.speed
 
     def update(self) -> None:
         self.get_input()
