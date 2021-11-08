@@ -2,15 +2,17 @@ import sys
 from player import Player
 import pygame as pg
 from config import Config as cfg
+from sprites import Sprites
 
 
 class Game:
     def __init__(self):
-        self.player = pg.sprite.GroupSingle(Player((cfg.SCREEN_WIDTH / 2, cfg.SCREEN_HEIGHT)))
+        self.player = pg.sprite.GroupSingle(Player())
+        Sprites.all_sprites.add(self.player)
 
     def update(self):
-        self.player.update()
-        self.player.draw(screen)
+        Sprites.all_sprites.update()
+        Sprites.all_sprites.draw(screen)
 
 
 if __name__ == "__main__":
