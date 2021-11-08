@@ -30,7 +30,7 @@ class Player(pg.sprite.Sprite):
         elif keys[pg.K_LEFT]:
             if self.rect.x >= 0:
                 self.rect.x -= self.speed
-        elif keys[pg.K_SPACE]:
+        if keys[pg.K_SPACE]:
             self.shoot()
 
     def update(self) -> None:
