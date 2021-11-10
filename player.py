@@ -1,31 +1,33 @@
 import pygame as pg
-from config import Config as cfg
+
 from bullet import Bullet
+from config import Config as cfg
 from sprites import Sprites
+from commonFuncs import CommonFuncs
 
 
-def change_size(image, multiplier):
-    img_size = image.get_size()
-    return pg.transform.scale(image, (img_size[0] * multiplier, img_size[1] * multiplier))
-
-
-class Player(pg.sprite.Sprite):
-    def __init__(self):
+class Ship(pg.sprite.Sprite):
+    def __init__(self, pos=(cfg.GAME_WIDTH / 2, cfg.GAME_HEIGHT)):
         super().__init__()
-        self.image = change_size(pg.image.load('src/ship.png').convert_alpha(), 0.1)
+        self.image = CommonFuncs.change_size(pg.image.load('src/ship.png').convert_alpha(), 0.1)
 
-        self.rect = self.image.get_rect(midbottom=(cfg.SCREEN_WIDTH / 2, cfg.SCREEN_HEIGHT))
+        self.rect = self.image.get_rect(midbottom=pos)
         self.speed = 3
         self.size_x = self.rect.size[0]
         self.size_y = self.image.get_size()[1]
         self.reload = False
         self.shot_time = 0
 
+
+class Player(Ship):
+    def __init__(self):
+        super().__init__()
+
     def get_input(self):
         keys = pg.key.get_pressed()
 
         if keys[pg.K_RIGHT]:
-            if self.rect.x <= (cfg.SCREEN_WIDTH - self.speed - self.size_x):
+            if self.rect.x <= (cfg.GAME_WIDTH - self.speed - self.size_x):
                 self.rect.x += self.speed
         elif keys[pg.K_LEFT]:
             if self.rect.x >= 0:

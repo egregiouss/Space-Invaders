@@ -12,8 +12,8 @@ class Bullet(pg.sprite.Sprite):
         self.rect.centerx = x
 
 
-    def update(self):
-        self.rect.y += cfg.BULLET_SPEED
+    def update(self, speed):
+        self.rect.y += speed
         # убить, если он заходит за верхнюю часть экрана
         if self.rect.bottom < 0:
             self.kill()
