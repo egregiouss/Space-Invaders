@@ -9,6 +9,7 @@ class Save:
 
     def get(self, key):
         return self.file[key]
+
     def get_all(self):
         return self.file
 

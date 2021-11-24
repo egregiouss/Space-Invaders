@@ -23,7 +23,7 @@ class Config:
     dir = 1
     ENEMY_MOVE = 0
     SCORE = 0
-    hps = 3
+    hps = 1
     LVL = 0
     ENEMY_SHAPES = {1: ["xx"],
                     2: ["xx"],

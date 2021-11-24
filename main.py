@@ -11,6 +11,7 @@ from enemy import Enemy, MysteryShip
 from bunker import BunkerElement
 from states import States
 from save import Save
+from highscore import Highscore
 
 def generate_hud():
     for i in range(50, 50*(cfg.hps+1), 50):
@@ -87,12 +88,12 @@ class Game:
         Sprites.all_sprites.add(player)
     def update(self, events):
         if self.state == States.LOSE:
-            self.draw_game_over()
+            self.game_over()
         elif self.state == States.PLAY and len(Sprites.aliens.sprites()) == 0:
             if cfg.LVL < len(cfg.ENEMY_SHAPES.keys()):
                 load_next_lvl()
             else:
-                self.draw_win()
+                self.game_win()
         elif self.state == States.HIGHSCORE:
             self.draw_highscores()
         else:
@@ -101,6 +102,7 @@ class Game:
                 self.update_menu()
             elif self.state == States.TYPING:
                 if self.need_input:
+                    screen.fill((30, 30, 30))
                     self.draw_text(self.font, self.input_text, "white",
                                    ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 2))
                     for e in events:
@@ -138,30 +140,9 @@ class Game:
                 Sprites.healths.draw(screen)
 
     def draw_text(self,font, text, color, pos):
-        screen.fill((30, 30, 30))
         surf = font.render(text, False, color)
         rect = surf.get_rect(center = pos)
         screen.blit(surf, rect)
-    def draw_highscores(self):
-        screen.fill((30, 30, 30))
-        score_surf = self.font.render(f"HIGHSCORES!", False, 'white')
-        for i in save.get_all():
-            print(i)
-        score_rect = score_surf.get_rect(center=((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 8))
-        screen.blit(score_surf, score_rect)
-
-    def draw_win(self):
-        screen.fill((30, 30, 30))
-        score_surf = self.font.render(f"{self.input_text} YOU WIN!", False, 'white')
-        save.add(self.input_text, cfg.SCORE)
-        score_rect = score_surf.get_rect(center=((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 2))
-        screen.blit(score_surf, score_rect)
-
-    def draw_game_over(self):
-        screen.fill((30, 30, 30))
-        score_surf = self.font.render(f"YOU LOSE!", False, 'white')
-        score_rect = score_surf.get_rect(center=((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 2))
-        screen.blit(score_surf, score_rect)
 
     def check_collisions(self):
         pg.sprite.groupcollide(Sprites.bullets, Sprites.bunkers, True, True)
@@ -183,7 +164,7 @@ class Game:
                 for enemy in hit:
                     cfg.SCORE += enemy.points
         score_surf = self.font.render(f'score: {cfg.SCORE}', False, 'white')
-        score_rect = score_surf.get_rect(topleft=(10, -10))
+        score_rect = score_surf.get_rect(topright=(cfg.GAME_WIDTH + cfg.HUD_WIDTH-10, -10))
         screen.blit(score_surf, score_rect)
 
     def show_menu(self):
@@ -217,6 +198,34 @@ class Game:
             else:
                 self.input_text += e.unicode
 
+    def game_over(self):
+        self.draw_text(self.font, "GAME OVER", "red", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 10))
+        if not save.isSave:
+            save.add(self.input_text, cfg.SCORE)
+            save.isSave = True
+        self.draw_table()
+
+    def draw_highscores(self):
+        screen.fill((30, 30, 30))
+        self.draw_text(self.font, "HIGHSCORES", "white", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 8))
+        self.draw_table()
+
+    def draw_table(self):
+        offset = 50
+        for player in save.get_all().keys():
+            self.draw_text(self.font, str(player), "white",
+                           ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2 - 100, cfg.GAME_HEIGHT / 8 + offset))
+            self.draw_text(self.font, str(save.get(player)), "white",
+                           ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2 + 50, cfg.GAME_HEIGHT / 8 + offset))
+            offset += 50
+
+    def game_win(self):
+        self.draw_text(self.font, f"{self.input_text}, YOU WON!", "green", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 10))
+        if not save.isSave:
+            save.add(self.input_text, cfg.SCORE)
+            save.isSave = True
+        self.draw_table()
+
 
 def load_next_lvl():
     cfg.LVL += 1
@@ -245,7 +254,7 @@ if __name__ == "__main__":
     pg.time.set_timer(cfg.ENEMY_MOVE, cfg.MOVE_TIME)
     pg.time.set_timer(mystery, random.randint(7000, 10000))
     generate_hud()
-    save = Save()
+    save = Highscore()
 
     while True:
         events = pg.event.get()
@@ -257,3 +266,5 @@ if __name__ == "__main__":
         game.update(events)
         pg.display.flip()
         clock.tick(60)
+
+
