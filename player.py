@@ -12,7 +12,7 @@ class Ship(pg.sprite.Sprite):
         self.image = CommonFuncs.change_size(pg.image.load('src/ship.png').convert_alpha(), 0.1)
 
         self.rect = self.image.get_rect(midbottom=pos)
-        self.speed = 3
+        self.speed = cfg.PLAYER_SPEED
         self.size_x = self.rect.size[0]
         self.size_y = self.image.get_size()[1]
         self.reload = False
