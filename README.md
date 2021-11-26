@@ -4,7 +4,7 @@ Space invaders on Python.
 ## Usage
 
 ```sh
-sudo python3 main.py
+python3 main.py
 ```
 *GUI
 
