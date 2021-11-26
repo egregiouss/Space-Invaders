@@ -1,10 +1,11 @@
 import random
 import sys
+import pygame as pg
 
 import pygame.sprite
-
+import player
 from player import Player, Ship
-import pygame as pg
+
 from config import Config as cfg
 from sprites import Sprites
 from enemy import Enemy, MysteryShip
@@ -61,9 +62,6 @@ def generate_enemies(shape):
                 Sprites.all_sprites.add(enemie)
                 enemies.append(enemie)
 
-
-
-
 class Game:
     def __init__(self, lvl=0):
         self.font = pg.font.Font('src/Pixeled.ttf', 20)
@@ -103,6 +101,8 @@ class Game:
             elif self.state == States.TYPING:
                 if self.need_input:
                     screen.fill((30, 30, 30))
+                    self.draw_text(self.font, "Enter your name", "white",
+                                   ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 8))
                     self.draw_text(self.font, self.input_text, "white",
                                    ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 2))
                     for e in events:
