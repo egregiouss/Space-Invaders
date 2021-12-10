@@ -1,19 +1,25 @@
 import random
+import pathlib
 import sys
 import pygame as pg
-
 import pygame.sprite
-import player
 from player import Player, Ship
 
-from config import Config as cfg
+from src.code.config import Config as cfg
 from sprites import Sprites
 from enemy import Enemy, MysteryShip
 from bunker import BunkerElement
 from states import States
-from save import Save
 from highscore import Highscore
 
+
+CWD = pathlib.Path.cwd()
+scenes = {
+    'menu':[States.PLAY, States.HIGHSCORE],
+    'high':[States.MENU],
+    'typing':[States.MENU, States.PLAY],
+    'play':[States.LOSE]
+}
 def generate_hud():
     for i in range(50, 50*(cfg.hps+1), 50):
         ship = Ship((cfg.GAME_WIDTH + i, cfg.GAME_HEIGHT))
@@ -30,7 +36,7 @@ def generate_bunker(shape, offset_x, offset_y):
 
 
 def generate_bunkers():
-    shape = ["    xxxxxxxxxxxxxxxx",
+    shape = ["    xxxxxxxxxxxxxxx",
              "   xxxxxxxxxxxxxxxxxx",
              "  xxxxxxxxxxxxxxxxxxxx",
              " xxxxxxxxxxxxxxxxxxxxxx",
@@ -64,7 +70,7 @@ def generate_enemies(shape):
 
 class Game:
     def __init__(self, lvl=0):
-        self.font = pg.font.Font('src/Pixeled.ttf', 20)
+        self.font = cfg.FONT
         self.setup_game()
         if lvl != 0:
             shape = cfg.ENEMY_SHAPES[lvl]
@@ -89,7 +95,8 @@ class Game:
             self.game_over()
         elif self.state == States.PLAY and len(Sprites.aliens.sprites()) == 0:
             if cfg.LVL < len(cfg.ENEMY_SHAPES.keys()):
-                load_next_lvl()
+                cfg.LVL += 1
+                load_lvl(cfg.LVL)
             else:
                 self.game_win()
         elif self.state == States.HIGHSCORE:
@@ -100,17 +107,10 @@ class Game:
                 self.update_menu()
             elif self.state == States.TYPING:
                 if self.need_input:
-                    screen.fill((30, 30, 30))
-                    self.draw_text(self.font, "Enter your name", "white",
-                                   ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 8))
-                    self.draw_text(self.font, self.input_text, "white",
-                                   ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 2))
-                    for e in events:
-                        self.get_input(e)
+                    self.draw_input(events)
 
             elif self.state == States.PLAY:
                 for e in events:
-
                     if e.type == ENEMY_SHOOT:
                         Enemy.shoot()
                     if e.type == cfg.ENEMY_MOVE:
@@ -138,6 +138,18 @@ class Game:
                 self.check_collisions()
                 Sprites.all_sprites.draw(screen)
                 Sprites.healths.draw(screen)
+
+    def draw_input(self, events):
+        screen.fill((30, 30, 30))
+        self.draw_text(self.font, "Enter your name", "white",
+                       ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 8))
+        self.draw_text(self.font, self.input_text, "white",
+                       ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 2))
+        self.draw_btn("back", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 6, cfg.GAME_HEIGHT-100))
+        for e in events:
+            self.get_input(e)
+            if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["back"].collidepoint(pg.mouse.get_pos()):
+                self.state = States.MENU
 
     def draw_text(self,font, text, color, pos):
         surf = font.render(text, False, color)
@@ -204,11 +216,22 @@ class Game:
             save.add(self.input_text, cfg.SCORE)
             save.isSave = True
         self.draw_table()
+        self.draw_btn("try again", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 6, cfg.GAME_HEIGHT - 100))
+        for e in events:
+            if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["try again"].collidepoint(pg.mouse.get_pos()):
+                self.state = States.PLAY
+                cfg.hps=3
+                generate_hud()
+                load_lvl(1)
 
     def draw_highscores(self):
         screen.fill((30, 30, 30))
         self.draw_text(self.font, "HIGHSCORES", "white", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 2, cfg.GAME_HEIGHT / 8))
         self.draw_table()
+        self.draw_btn("back", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 6, cfg.GAME_HEIGHT - 100))
+        for e in events:
+            if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["back"].collidepoint(pg.mouse.get_pos()):
+                self.state = States.MENU
 
     def draw_table(self):
         offset = 50
@@ -227,21 +250,22 @@ class Game:
         self.draw_table()
 
 
-def load_next_lvl():
-    cfg.LVL += 1
+def load_lvl(lvl):
+
     for spr in Sprites.all_sprites.sprites():
         spr.kill()
-    font = pg.font.Font('src/Pixeled.ttf', 20)
+    font = cfg.FONT
     screen.fill((30, 30, 30))
-    score_surf = font.render(f"LEVEL {cfg.LVL}:", False, 'white')
+    score_surf = font.render(f"LEVEL {lvl}:", False, 'white')
     score_rect = score_surf.get_rect(center=((cfg.GAME_WIDTH + cfg.HUD_WIDTH)/2, cfg.GAME_HEIGHT/2))
     screen.blit(score_surf, score_rect)
     pg.display.flip()
     pg.time.delay(1000)
-    return Game(cfg.LVL)
+    return Game(lvl)
 
 
-if __name__ == "__main__":
+def main():
+    global ENEMY_SHOOT, mystery, screen, save, events
     ENEMY_SHOOT = pg.USEREVENT + 1
     cfg.ENEMY_MOVE = pg.USEREVENT + 2
     mystery = pg.USEREVENT + 3
@@ -255,7 +279,6 @@ if __name__ == "__main__":
     pg.time.set_timer(mystery, random.randint(7000, 10000))
     generate_hud()
     save = Highscore()
-
     while True:
         events = pg.event.get()
         for e in events:
@@ -266,5 +289,9 @@ if __name__ == "__main__":
         game.update(events)
         pg.display.flip()
         clock.tick(60)
+
+
+if __name__ == "__main__":
+    main()
 
 

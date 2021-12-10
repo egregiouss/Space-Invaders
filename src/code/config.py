@@ -1,9 +1,14 @@
+import pathlib
 from dataclasses import dataclass
 import pygame as pg
+from pathlib import Path
 
 
+pg.init()
 @dataclass()
 class Config:
+    CWD = pathlib.Path.cwd()
+
     GAME_WIDTH = 800
     GAME_HEIGHT = 600
     HUD_WIDTH = 300
@@ -25,7 +30,11 @@ class Config:
     SCORE = 0
     hps = 1
     LVL = 0
-    ENEMY_SHAPES = {1: ["xx"],
+    FONT = pg.font.Font('../images/Pixeled.ttf', 20)
+    ENEMY_SHAPES = {1: ["x"],
                     2: ["xx"],
-                    3: ["xx"]}
+                    3: ["xxx"]}
+    ENEMY_PATH = "../images/alien.png"
+    UFO_PATH = "../images/ufo.png"
+    PLAYER_PATH = "../images/ship.png"
 

@@ -1,4 +1,3 @@
-from config import Config as cfg
 import pygame as pg
 
 
