@@ -1,17 +1,20 @@
 import pygame as pg
-from commonFuncs import CommonFuncs
-from src.code.config import Config as cfg
-from sprites import Sprites
+from code.commonFuncs import CommonFuncs
+from code.config import Config as cfg
+from code.sprites import Sprites
 from random import choice
-from bullet import Bullet
+from code.bullet import Bullet
 class Enemy(pg.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.image = CommonFuncs.set_size(pg.image.load(cfg.ENEMY_PATH).convert_alpha(), 50, 50)
+        self.image = self.setup_image()
         self.rect = self.image.get_rect(center=pos)
         self.speed = cfg.ENEMIES_SPEED
         self.points = 100
 
+    def setup_image(self):
+        res= CommonFuncs.set_size(pg.image.load(cfg.ENEMY_PATH).convert_alpha(), 50, 50)
+        return res
 
     def move(self) -> None:
         pg.rect.Rect.move_ip(self.rect, cfg.dir * cfg.ENEMIES_SPEED, 0)
@@ -45,7 +48,7 @@ class Enemy(pg.sprite.Sprite):
 class MysteryShip(Enemy):
     def __init__(self, pos, dir):
         super().__init__(pos)
-        self.image = CommonFuncs.set_size(pg.image.load(cfg.UFO_PATH).convert_alpha(), 100, 50)
+        self.image = self.setup_image()
         self.rect = self.image.get_rect(center=pos)
         self.speed = cfg.ENEMIES_SPEED
         self.points = 500

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import pygame as pg
-import commonFuncs
+
 
 
 @dataclass

@@ -1,4 +1,4 @@
-from save import Save
+from code.save import Save
 
 class Highscore(Save):
     def __init__(self):

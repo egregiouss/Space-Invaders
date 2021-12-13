@@ -3,14 +3,14 @@ import pathlib
 import sys
 import pygame as pg
 import pygame.sprite
-from player import Player, Ship
+from code.player import Player, Ship
 
-from src.code.config import Config as cfg
-from sprites import Sprites
-from enemy import Enemy, MysteryShip
-from bunker import BunkerElement
-from states import States
-from highscore import Highscore
+from code.config import Config as cfg
+from code.sprites import Sprites
+from code.enemy import Enemy, MysteryShip
+from code.bunker import BunkerElement
+from code.states import States
+from code.highscore import Highscore
 
 
 CWD = pathlib.Path.cwd()
@@ -135,6 +135,7 @@ class Game:
                 Sprites.enemies_lasers.update(-cfg.BULLET_SPEED)
                 pg.draw.line(screen, (255, 255, 255), (cfg.GAME_WIDTH, 0), (cfg.GAME_WIDTH, cfg.GAME_HEIGHT), 4)
                 self.update_score()
+                self.draw_score()
                 self.check_collisions()
                 Sprites.all_sprites.draw(screen)
                 Sprites.healths.draw(screen)
@@ -169,14 +170,21 @@ class Game:
                 Sprites.player.sprites()[0].kill()
                 self.state = States.LOSE
 
-    def update_score(self):
-        hits = pygame.sprite.groupcollide(Sprites.bullets, Sprites.enemies, True, True)
+    @staticmethod
+    def update_score():
+        hits = Game.get_hits()
         if hits:
             for hit in hits.values():
                 for enemy in hit:
                     cfg.SCORE += enemy.points
+
+    @staticmethod
+    def get_hits():
+        return pygame.sprite.groupcollide(Sprites.bullets, Sprites.enemies, True, True)
+
+    def draw_score(self):
         score_surf = self.font.render(f'score: {cfg.SCORE}', False, 'white')
-        score_rect = score_surf.get_rect(topright=(cfg.GAME_WIDTH + cfg.HUD_WIDTH-10, -10))
+        score_rect = score_surf.get_rect(topright=(cfg.GAME_WIDTH + cfg.HUD_WIDTH - 10, -10))
         screen.blit(score_surf, score_rect)
 
     def show_menu(self):
@@ -216,11 +224,16 @@ class Game:
             save.add(self.input_text, cfg.SCORE)
             save.isSave = True
         self.draw_table()
+        self.restart()
+
+    def restart(self):
         self.draw_btn("try again", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 6, cfg.GAME_HEIGHT - 100))
         for e in events:
             if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["try again"].collidepoint(pg.mouse.get_pos()):
                 self.state = States.PLAY
-                cfg.hps=3
+                cfg.hps = 3
+                cfg.LVL = 1
+                cfg.SCORE = 0
                 generate_hud()
                 load_lvl(1)
 
@@ -248,6 +261,7 @@ class Game:
             save.add(self.input_text, cfg.SCORE)
             save.isSave = True
         self.draw_table()
+        self.restart()
 
 
 def load_lvl(lvl):
