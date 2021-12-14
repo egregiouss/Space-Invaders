@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.code.enemy import Enemy
+from code.enemy import Enemy
 
 from unittest.mock import patch
 
