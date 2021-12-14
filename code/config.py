@@ -30,6 +30,7 @@ class Config:
     SCORE = 0
     hps = 1
     LVL = 0
+    print(CWD)
     FONT = pg.font.Font('../images/Pixeled.ttf', 20)
     ENEMY_SHAPES = {1: ["x"],
                     2: ["xx"],

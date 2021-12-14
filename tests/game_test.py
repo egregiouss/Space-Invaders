@@ -1,10 +1,49 @@
+
+import pygame as pg
+import pytest
+
 from code.config import Config
 from code.enemy import Enemy, MysteryShip
-import pygame as pg
+
 from code.main import generate_enemies
 from code.main import Game
 from unittest.mock import patch
 from code.sprites import Sprites
+
+
+@pytest.fixture()
+@patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
+def enemy():
+    return Enemy((10, 10))
+
+
+def test_simple_movement_left(enemy):
+    enemy.move()
+    expected = (10 + Config.dir * Config.ENEMIES_SPEED, 10)
+    assert expected == (enemy.rect.centerx, enemy.rect.centery)
+
+
+def test_simple_movement_right(enemy):
+    Config.dir = -1
+    enemy.move()
+    expected = (10 + Config.dir * Config.ENEMIES_SPEED, 10)
+    assert expected == (enemy.rect.centerx, enemy.rect.centery)
+
+
+def test_multi_movement_left(enemy):
+    for i in range(10):
+        enemy.move()
+    expected = (10 + (Config.dir * Config.ENEMIES_SPEED)*10, 10)
+    assert expected == (enemy.rect.centerx, enemy.rect.centery)
+
+
+def test_multi_movement_right(enemy):
+    Config.dir = -1
+    for i in range(10):
+        enemy.move()
+    expected = (10 + (Config.dir * Config.ENEMIES_SPEED) * 10, 10)
+    assert expected == (enemy.rect.centerx, enemy.rect.centery)
+
 
 
 @patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
@@ -46,3 +85,8 @@ def test_score_only_aliens():
     Game.update_score()
     expected = 200
     assert Config.SCORE == expected
+
+
+
+
+
