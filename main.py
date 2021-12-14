@@ -35,24 +35,11 @@ def generate_bunker(shape, offset_x, offset_y):
                 Sprites.all_sprites.add(wall)
 
 
-def generate_bunkers():
-    shape = ["    xxxxxxxxxxxxxxx",
-             "   xxxxxxxxxxxxxxxxxx",
-             "  xxxxxxxxxxxxxxxxxxxx",
-             " xxxxxxxxxxxxxxxxxxxxxx",
-             "xxxxxxxxxxxxxxxxxxxxxxxx",
-             "xxxxxxxxxxxxxxxxxxxxxxxx",
-             "xxxxxxxxxxxxxxxxxxxxxxxx",
-             "xxxxxxxxxxxxxxxxxxxxxxxx",
-             "xxxxxxxx        xxxxxxxx",
-             "xxxxxxx          xxxxxxx",
-             "xxxxxx            xxxxxx",
-             "xxxxx              xxxxx"]
-
-    generate_bunker(shape, 50, cfg.GAME_HEIGHT - 120)
-    generate_bunker(shape, 250, cfg.GAME_HEIGHT - 120)
-    generate_bunker(shape, 450, cfg.GAME_HEIGHT - 120)
-    generate_bunker(shape, 650, cfg.GAME_HEIGHT - 120)
+def generate_bunkers(lvl):
+    generate_bunker(cfg.BUNKERS_SHAPES[lvl][0], 50, cfg.GAME_HEIGHT - 120)
+    generate_bunker(cfg.BUNKERS_SHAPES[lvl][1], 250, cfg.GAME_HEIGHT - 120)
+    generate_bunker(cfg.BUNKERS_SHAPES[lvl][2], 450, cfg.GAME_HEIGHT - 120)
+    generate_bunker(cfg.BUNKERS_SHAPES[lvl][3], 650, cfg.GAME_HEIGHT - 120)
 
 
 def generate_enemies(shape):
@@ -75,7 +62,7 @@ class Game:
         if lvl != 0:
             shape = cfg.ENEMY_SHAPES[lvl]
             generate_enemies(shape)
-            generate_bunkers()
+            generate_bunkers(lvl)
         self.alien_direction = 1
         self.move_time = 0
         self.enemies = []
@@ -111,7 +98,7 @@ class Game:
 
             elif self.state == States.PLAY:
                 for e in events:
-                    if e.type == ENEMY_SHOOT:
+                    if e.type == cfg.ENEMY_SHOOT:
                         Enemy.shoot()
                     if e.type == cfg.ENEMY_MOVE:
                         Enemy.check_dir()
@@ -163,6 +150,7 @@ class Game:
         pg.sprite.groupcollide(Sprites.bullets, Sprites.bunkers, True, True)
         pg.sprite.groupcollide(Sprites.enemies_lasers, Sprites.bunkers, True, True)
         hits_in_player = pg.sprite.groupcollide(Sprites.enemies_lasers, Sprites.player, True, False)
+        crash_in_player = pg.sprite.groupcollide(Sprites.aliens, Sprites.player, False, False)
         if hits_in_player:
             if cfg.hps > 0:
                 cfg.hps -= 1
@@ -171,6 +159,10 @@ class Game:
             else:
                 Sprites.player.sprites()[0].kill()
                 self.state = States.LOSE
+        if crash_in_player:
+            cfg.hps = -1
+            Sprites.player.sprites()[0].kill()
+            self.state = States.LOSE
 
     @staticmethod
     def update_score():
@@ -206,6 +198,7 @@ class Game:
         for e in events:
             if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["Play"].collidepoint(pg.mouse.get_pos()):
                 self.state = States.TYPING
+                print(len(Sprites.aliens.sprites()))
             if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["Highscore"].collidepoint(pg.mouse.get_pos()):
                 self.state = States.HIGHSCORE
 
@@ -226,18 +219,29 @@ class Game:
             save.add(self.input_text, cfg.SCORE)
             save.isSave = True
         self.draw_table()
+
         self.restart()
 
     def restart(self):
         self.draw_btn("try again", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) / 6, cfg.GAME_HEIGHT - 100))
+        self.draw_btn("menu", ((cfg.GAME_WIDTH + cfg.HUD_WIDTH) - 100, cfg.GAME_HEIGHT - 100))
+        for spr in Sprites.all_sprites.sprites():
+            spr.kill()
+        self.input_text =''
         for e in events:
             if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["try again"].collidepoint(pg.mouse.get_pos()):
                 self.state = States.PLAY
                 cfg.hps = 3
                 cfg.LVL = 1
                 cfg.SCORE = 0
-                generate_hud()
                 load_lvl(1)
+            elif e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["menu"].collidepoint(pg.mouse.get_pos()):
+                self.state = States.MENU
+                cfg.hps = 3
+                cfg.LVL = 0
+                cfg.SCORE = 0
+                self.need_input = True
+
 
     def draw_highscores(self):
         screen.fill((30, 30, 30))
@@ -267,7 +271,7 @@ class Game:
 
 
 def load_lvl(lvl):
-
+    generate_hud()
     for spr in Sprites.all_sprites.sprites():
         spr.kill()
     font = pg.font.Font('game/images/Pixeled.ttf', 20)
@@ -282,7 +286,7 @@ def load_lvl(lvl):
 
 def main():
     global ENEMY_SHOOT, mystery, screen, save, events
-    ENEMY_SHOOT = pg.USEREVENT + 1
+    cfg.ENEMY_SHOOT = pg.USEREVENT + 1
     cfg.ENEMY_MOVE = pg.USEREVENT + 2
     mystery = pg.USEREVENT + 3
     pg.init()
@@ -290,7 +294,7 @@ def main():
     screen = pg.display.set_mode((cfg.GAME_WIDTH + cfg.HUD_WIDTH, cfg.GAME_HEIGHT))
     clock = pg.time.Clock()
     game = Game()
-    pg.time.set_timer(ENEMY_SHOOT, 800)
+    pg.time.set_timer(cfg.ENEMY_SHOOT, cfg.ENEMY_SHOOT_TIME)
     pg.time.set_timer(cfg.ENEMY_MOVE, cfg.MOVE_TIME)
     pg.time.set_timer(mystery, random.randint(7000, 10000))
     generate_hud()
