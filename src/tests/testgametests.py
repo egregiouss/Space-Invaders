@@ -14,6 +14,9 @@ def enemy():
 
 
 class EnemyTests(unittest.TestCase):
+    def test_class_instantiate_ok(self):
+
+        self.assertIsNotNone("4")
 
     def test_simple_movement_left(enemy):
         enemy.move()
