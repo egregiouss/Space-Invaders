@@ -24,6 +24,7 @@ jobs:
         cd src
         python -m pip install --upgrade pip
         pip install coverage
+        pip install pygame
         if  [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run Unit Tests and generate coverage report
       run: |
