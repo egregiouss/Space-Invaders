@@ -4,7 +4,7 @@ import shutil
 import pytest
 from game.highscore import Highscore
 
-os.chdir('test_data')
+os.chdir('../test_data')
 
 def clear_dir():
     for filename in os.listdir(os.getcwd()):
