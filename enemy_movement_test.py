@@ -1,5 +1,5 @@
-from code.config import Config as cfg
-from code.enemy import Enemy
+from game.config import Config as cfg
+from game.enemy import Enemy
 import pygame as pg
 from unittest.mock import patch
 import pytest
@@ -7,7 +7,7 @@ import pytest
 
 
 @pytest.fixture()
-@patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def enemy():
     return Enemy((10, 10))
 

@@ -1,15 +1,15 @@
 import pygame as pg
 
-from code.bullet import Bullet
-from code.config import Config as cfg
-from code.sprites import Sprites
-from code.commonFuncs import CommonFuncs
+from game.bullet import Bullet
+from game.config import Config as cfg
+from game.sprites import Sprites
+from game.commonFuncs import CommonFuncs
 
 
 class Ship(pg.sprite.Sprite):
     def __init__(self, pos=(cfg.GAME_WIDTH / 2, cfg.GAME_HEIGHT)):
         super().__init__()
-        self.image = CommonFuncs.change_size(pg.image.load(cfg.PLAYER_PATH).convert_alpha(), 0.1)
+        self.image = CommonFuncs.change_size(pg.image.load("game/images/ship.png").convert_alpha(), 0.1)
 
         self.rect = self.image.get_rect(midbottom=pos)
         self.speed = cfg.PLAYER_SPEED

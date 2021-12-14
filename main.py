@@ -3,14 +3,14 @@ import pathlib
 import sys
 import pygame as pg
 import pygame.sprite
-from code.player import Player, Ship
+from game.player import Player, Ship
 
-from code.config import Config as cfg
-from code.sprites import Sprites
-from code.enemy import Enemy, MysteryShip
-from code.bunker import BunkerElement
-from code.states import States
-from code.highscore import Highscore
+from game.config import Config as cfg
+from game.sprites import Sprites
+from game.enemy import Enemy, MysteryShip
+from game.bunker import BunkerElement
+from game.states import States
+from game.highscore import Highscore
 
 
 CWD = pathlib.Path.cwd()
@@ -70,7 +70,7 @@ def generate_enemies(shape):
 
 class Game:
     def __init__(self, lvl=0):
-        self.font = cfg.FONT
+        self.font = pg.font.Font('game/images/Pixeled.ttf', 20)
         self.setup_game()
         if lvl != 0:
             shape = cfg.ENEMY_SHAPES[lvl]
@@ -268,7 +268,7 @@ def load_lvl(lvl):
 
     for spr in Sprites.all_sprites.sprites():
         spr.kill()
-    font = cfg.FONT
+    font = pg.font.Font('game/images/Pixeled.ttf', 20)
     screen.fill((30, 30, 30))
     score_surf = font.render(f"LEVEL {lvl}:", False, 'white')
     score_rect = score_surf.get_rect(center=((cfg.GAME_WIDTH + cfg.HUD_WIDTH)/2, cfg.GAME_HEIGHT/2))

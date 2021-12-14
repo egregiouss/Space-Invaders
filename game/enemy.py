@@ -1,9 +1,9 @@
 import pygame as pg
-from code.commonFuncs import CommonFuncs
-from code.config import Config as cfg
-from code.sprites import Sprites
+from game.commonFuncs import CommonFuncs
+from game.config import Config as cfg
+from game.sprites import Sprites
 from random import choice
-from code.bullet import Bullet
+from game.bullet import Bullet
 class Enemy(pg.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
@@ -13,7 +13,7 @@ class Enemy(pg.sprite.Sprite):
         self.points = 100
 
     def setup_image(self):
-        res= CommonFuncs.set_size(pg.image.load(cfg.ENEMY_PATH).convert_alpha(), 50, 50)
+        res= CommonFuncs.set_size(pg.image.load("game/images/alien.png").convert_alpha(), 50, 50)
         return res
 
     def move(self) -> None:

@@ -1,13 +1,13 @@
-from code.config import Config
-from code.enemy import Enemy, MysteryShip
+from game.config import Config
+from game.enemy import Enemy, MysteryShip
 import pygame as pg
-from code.main import generate_enemies
-from code.main import Game
+from main import generate_enemies
+from main import Game
 from unittest.mock import patch
-from code.sprites import Sprites
+from game.sprites import Sprites
 
 
-@patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def test_generating_enemies():
     for spr in Sprites.all_sprites.sprites():
         spr.kill()
@@ -17,7 +17,7 @@ def test_generating_enemies():
     assert len(Sprites.aliens) == expected
 
 
-@patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def test_generating_enemies_with_spaced_shape():
     for spr in Sprites.all_sprites.sprites():
         spr.kill()
@@ -27,8 +27,8 @@ def test_generating_enemies_with_spaced_shape():
     assert len(Sprites.aliens) == expected
 
 
-@patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
-@patch('code.main.Game.get_hits', lambda: {'hit1': [Enemy((10, 10))],
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
+@patch('main.Game.get_hits', lambda: {'hit1': [Enemy((10, 10))],
                                                'hit2': [Enemy((5, 5))],
                                                'hit3': [MysteryShip((5, 10), 1)]})
 def test_score_with_spaceship():
@@ -38,8 +38,8 @@ def test_score_with_spaceship():
     assert Config.SCORE == expected
 
 
-@patch('code.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
-@patch('code.main.Game.get_hits', lambda: {'hit1': [Enemy((10, 10))],
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
+@patch('main.Game.get_hits', lambda: {'hit1': [Enemy((10, 10))],
                                                'hit2': [Enemy((5, 5))]})
 def test_score_only_aliens():
     Config.SCORE = 0
