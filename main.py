@@ -160,7 +160,6 @@ class Game:
                 Sprites.player.sprites()[0].kill()
                 self.state = States.LOSE
         if crash_in_player:
-            cfg.hps = -1
             Sprites.player.sprites()[0].kill()
             self.state = States.LOSE
 
@@ -297,7 +296,6 @@ def main():
     pg.time.set_timer(cfg.ENEMY_SHOOT, cfg.ENEMY_SHOOT_TIME)
     pg.time.set_timer(cfg.ENEMY_MOVE, cfg.MOVE_TIME)
     pg.time.set_timer(mystery, random.randint(7000, 10000))
-    generate_hud()
     save = Highscore()
     while True:
         events = pg.event.get()
