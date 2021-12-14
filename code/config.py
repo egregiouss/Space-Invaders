@@ -31,11 +31,11 @@ class Config:
     hps = 1
     LVL = 0
     print(CWD)
-    FONT = pg.font.Font(CWD / 'images' / 'Pixeled.ttf', 20)
+    FONT = pg.font.Font('../images/Pixeled.ttf', 20)
     ENEMY_SHAPES = {1: ["x"],
                     2: ["xx"],
                     3: ["xxx"]}
-    ENEMY_PATH = CWD / 'images' / 'alien.png'
-    UFO_PATH = CWD / 'images' / 'ufo.png'
-    PLAYER_PATH = CWD / 'images' / 'ship.png'
+    ENEMY_PATH = '../images/alien.png'
+    UFO_PATH = '../images/ufo.png'
+    PLAYER_PATH = '../images/ship.png'
 
