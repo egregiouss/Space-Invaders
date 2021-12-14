@@ -35,4 +35,4 @@ jobs:
           python -m unittest -v tests.game_test
       - name: Check coverage
         run: |
-          coverage run -m pytest
+          coverage run -m code
