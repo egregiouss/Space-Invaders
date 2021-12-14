@@ -1,6 +1,7 @@
 
 import pygame as pg
 import pytest
+import unittest
 
 
 from src.code.enemy import Enemy
@@ -13,9 +14,9 @@ from unittest.mock import patch
 def enemy():
     return Enemy((10, 10))
 
-
-def test_simple_movement_left(enemy):
-    enemy.move()
-    expected = (10 + 10, 10)
-    assert expected == (enemy.rect.centerx, enemy.rect.centery)
+class TestOne(unittest.TestCase):
+    def test_simple_movement_left(enemy):
+        enemy.move()
+        expected = (10 + 10, 10)
+        assert expected == (enemy.rect.centerx, enemy.rect.centery)
 
