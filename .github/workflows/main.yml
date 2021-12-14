@@ -33,7 +33,9 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          python -m unittest -v tests.game_test
+          cd code
+          python -m unittest -v
       - name: Check coverage
         run: |
+          cd code
           coverage run -m unittest
