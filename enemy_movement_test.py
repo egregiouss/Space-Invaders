@@ -12,12 +12,14 @@ def enemy():
     return Enemy((10, 10))
 
 
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def test_simple_movement_left(enemy):
     enemy.move()
     expected = (10 + cfg.dir * cfg.ENEMIES_SPEED, 10)
     assert expected == (enemy.rect.centerx, enemy.rect.centery)
 
 
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def test_simple_movement_right(enemy):
     cfg.dir = -1
     enemy.move()
@@ -25,6 +27,7 @@ def test_simple_movement_right(enemy):
     assert expected == (enemy.rect.centerx, enemy.rect.centery)
 
 
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def test_multi_movement_left(enemy):
     for i in range(10):
         enemy.move()
@@ -32,6 +35,7 @@ def test_multi_movement_left(enemy):
     assert expected == (enemy.rect.centerx, enemy.rect.centery)
 
 
+@patch('game.enemy.Enemy.setup_image', lambda x: pg.Surface((50, 50)))
 def test_multi_movement_right(enemy):
     cfg.dir = -1
     for i in range(10):

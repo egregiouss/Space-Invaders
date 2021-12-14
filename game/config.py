@@ -30,7 +30,8 @@ class Config:
     SCORE = 0
     hps = 1
     LVL = 0
-    ENEMY_SHAPES = {1: ["x"],
+    ENEMY_SHAPES = {1: ["xxxxxxxx",
+                        "xxxxxxxx"],
                     2: ["xx"],
                     3: ["xxx"]}
 

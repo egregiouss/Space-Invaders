@@ -117,6 +117,8 @@ class Game:
                         Enemy.check_dir()
                         for i in Sprites.aliens.sprites():
                             i.move()
+
+
                     if e.type == mystery:
                         dir = random.choice(("left", "right"))
                         if dir == "left":
