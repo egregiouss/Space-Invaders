@@ -1,5 +1,5 @@
 import pygame as pg
-from .config import Config as cfg
+from code.config import Config as cfg
 class BunkerElement(pg.sprite.Sprite):
     def __init__(self,x, y):
         super().__init__()

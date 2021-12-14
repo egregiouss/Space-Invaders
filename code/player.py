@@ -1,9 +1,9 @@
 import pygame as pg
 
-from .bullet import Bullet
-from .config import Config as cfg
-from .sprites import Sprites
-from .commonFuncs import CommonFuncs
+from code.bullet import Bullet
+from code.config import Config as cfg
+from code.sprites import Sprites
+from code.commonFuncs import CommonFuncs
 
 
 class Ship(pg.sprite.Sprite):

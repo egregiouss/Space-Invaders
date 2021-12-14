@@ -1,9 +1,9 @@
 import pygame as pg
-from .commonFuncs import CommonFuncs
-from .config import Config as cfg
-from .sprites import Sprites
+from code.commonFuncs import CommonFuncs
+from code.config import Config as cfg
+from code.sprites import Sprites
 from random import choice
-from .bullet import Bullet
+from code.bullet import Bullet
 class Enemy(pg.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()

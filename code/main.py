@@ -3,14 +3,14 @@ import pathlib
 import sys
 import pygame as pg
 import pygame.sprite
-from .player import Player, Ship
+from code.player import Player, Ship
 
-from .config import Config as cfg
-from .sprites import Sprites
-from .enemy import Enemy, MysteryShip
-from .bunker import BunkerElement
-from .states import States
-from .highscore import Highscore
+from code.config import Config as cfg
+from code.sprites import Sprites
+from code.enemy import Enemy, MysteryShip
+from code.bunker import BunkerElement
+from code.states import States
+from code.highscore import Highscore
 
 
 CWD = pathlib.Path.cwd()
