@@ -3,13 +3,9 @@ import pygame as pg
 import pytest
 
 
-from code.enemy import Enemy, MysteryShip
+from src.code.enemy import Enemy
 
-from code.main import generate_enemies
-from code.main import Game
 from unittest.mock import patch
-from code.sprites import Sprites
-from code.config import Config
 
 
 @pytest.fixture()
