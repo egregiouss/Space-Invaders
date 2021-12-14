@@ -33,9 +33,9 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          cd 
+          cd src
           python -m unittest -v
       - name: Check coverage
         run: |
-          cd
+          cd src
           coverage run -m unittest
