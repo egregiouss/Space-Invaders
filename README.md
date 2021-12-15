@@ -21,3 +21,16 @@ python3 main.py
 *Бункеры
 
 *Mystery ship
+
+## Build
+Build via pyinstaller
+1) Install pyinstaller via pip:
+   ```sh
+  python3 main.py
+  ```
+2) run pyinstaller:
+ ```sh
+pyinstaller --noconfirm --onedir --windowed --add-data "<absolute path to folder 'game'>;game/"  "<absolute path to main.py"
+```
+3) from folder 'output' run main.exe
+
