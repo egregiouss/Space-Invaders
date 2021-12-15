@@ -26,7 +26,7 @@ python3 main.py
 Build via pyinstaller
 1) Install pyinstaller via pip:
    ```sh
-  python3 main.py
+  pip install pyinstaller
   ```
 2) run pyinstaller:
  ```sh
