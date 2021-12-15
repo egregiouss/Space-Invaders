@@ -32,7 +32,7 @@ Build via pyinstaller
 2) run pyinstaller:
 
 ```sh
-pyinstaller --noconfirm --onedir --windowed --add-data "<absolute path to folder 'game'>;game/"  "<absolute path to main.py"
+pyinstaller --noconfirm --onedir --windowed --add-data "<absolute path to folder 'game'>;game/"  "<absolute path to main.py>"
 ```
-3) from folder 'output' run main.exe
+3) from folder 'output', which been created in your home directory run main.exe
 
