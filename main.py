@@ -208,7 +208,8 @@ class Game:
                 self.state = States.PLAY
                 print(self.input_text)
             elif e.key == pg.K_BACKSPACE:
-                pass
+                if self.input_text != '':
+                    self.input_text=self.input_text[:len(self.input_text)-1]
             else:
                 self.input_text += e.unicode
 
@@ -230,17 +231,17 @@ class Game:
         for e in events:
             if e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["try again"].collidepoint(pg.mouse.get_pos()):
                 self.state = States.PLAY
-                cfg.hps = 3
-                cfg.LVL = 1
-                cfg.SCORE = 0
+                self.update_params()
                 load_lvl(1)
             elif e.type == pg.MOUSEBUTTONDOWN and self.menu_btns["menu"].collidepoint(pg.mouse.get_pos()):
                 self.state = States.MENU
-                cfg.hps = 3
-                cfg.LVL = 0
-                cfg.SCORE = 0
+                self.update_params()
                 self.need_input = True
 
+    def update_params(self):
+        cfg.hps = 3
+        cfg.LVL = 1
+        cfg.SCORE = 0
 
     def draw_highscores(self):
         screen.fill((30, 30, 30))
