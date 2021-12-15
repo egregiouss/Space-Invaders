@@ -25,11 +25,13 @@ python3 main.py
 ## Build
 Build via pyinstaller
 1) Install pyinstaller via pip:
-   ```sh
+
+  ```sh
   pip install pyinstaller
   ```
 2) run pyinstaller:
- ```sh
+
+```sh
 pyinstaller --noconfirm --onedir --windowed --add-data "<absolute path to folder 'game'>;game/"  "<absolute path to main.py"
 ```
 3) from folder 'output' run main.exe
